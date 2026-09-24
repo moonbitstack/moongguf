@@ -1,59 +1,35 @@
-# CHANGE-ME
+# moongguf
 
-One sentence saying what this is.
+GGUF files, read and written.
 
-```moonbit
-@lib.greet("moonbit")
-```
+> **Status: planned.** The repository is set up; nothing is
+> implemented yet.
 
-Run `moon run examples/tour` for the whole surface in one go.
+A GGUF file is a header, a table of metadata and an index of tensors, and then
+the tensor data itself. This reads all four and writes them back; it does not
+run anything.
 
-## Starting from this template
-
-1. `gh repo create moonbitstack/<name> --template moonbitstack/moonkit --public`
-2. Replace `CHANGE-ME` everywhere: `moon.mod` (name and repository), the two
-   `moon.pkg` files that import `lib`, and this file's title.
-3. Delete `bin/` if the repository ships no binary; delete `lib/` if it ships
-   only a binary. Most repositories here keep `lib/` and rename it to whatever
-   the package actually is — `base64/`, `sha2/`, `jwt/` — because a package is
-   named after what it does, not after its role.
-4. Fill in `keywords` and `description` in `moon.mod`. The description is what
-   mooncakes shows, so it says what the package is and what it is not.
-5. Write the specification link into every `moon.pkg`.
-
-## What is here and what is not
-
-| Carried | Why |
+| Package | What it covers |
 |:--|:--|
-| `.github/workflows/` | GitHub does not inherit workflows; every repository needs its own copy |
-| `moon.mod`, `lib/`, `bin/`, `examples/tour/` | The module layout, with the library and the binary separated the way cargo separates them |
-| `.gitignore`, `.moonignore` | The second one exists because `.gitignore`'s `!.git*` would otherwise pull the whole object database into a published tarball |
-| `LICENSE` | Apache-2.0, the same across the organisation |
+| `head` | The magic, the version and the two counts |
+| `meta` | The key-value table, every value type the format defines |
+| `index` | Tensor names, shapes, types and offsets |
+| `data` | Reaching the tensor bytes without reading the file whole |
 
-**Issue and pull-request templates are not here.** The organisation's `.github`
-repository supplies them to every repository that has none of its own; a copy
-here would shadow that one and then drift from it. A repository adds its own
-only when it needs something the organisation's does not cover.
+The reference is [the GGUF specification](https://github.com/ggml-org/ggml/blob/master/docs/gguf.md).
 
-## The gate
+## What is deliberately elsewhere
 
-Every commit passes this, with each exit code seen to be zero:
+Quantisation formats and what to do with a tensor once it is read belong to
+[`moonggml`](https://github.com/moonbitstack/moonggml). A file format library
+that also did arithmetic would be two libraries.
+
+## Install
 
 ```bash
-moon clean && moon fmt && moon check --target all --deny-warn \
-  && moon build --target all && moon test --target all
+moon add moonbitstack/moongguf
 ```
-
-Before a release, `moon info --target all && git diff --exit-code` as well: the
-generated interface is checked in, and a difference means the interface moved
-without anyone saying so.
-
-## Releasing
-
-Push a signed tag `v<version>`. `release.yml` runs the tests first and publishes
-only if they pass and the organisation variable `MOONCAKES_PUBLISH` is `true`.
-The major version stays at 0.
 
 ## Licence
 
-Apache-2.0.
+Apache-2.0. See [LICENSE](LICENSE).
