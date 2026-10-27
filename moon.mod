@@ -10,6 +10,6 @@ license = "Apache-2.0"
 
 keywords = [ "gguf", "model", "tensor", "llm", "moonbit" ]
 
-description = "moongguf — GGUF model files for MoonBit: the header, the metadata table and the tensor index, read and written."
+description = "GGUF model files for MoonBit, read and written."
 
 source = "src"
