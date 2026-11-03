@@ -8,7 +8,20 @@ repository = "https://github.com/moonbitstack/moongguf"
 
 license = "Apache-2.0"
 
-keywords = [ "gguf", "model", "tensor", "llm", "moonbit" ]
+keywords = [
+  "gguf",
+  "ggml",
+  "model-file",
+  "weights",
+  "tensor",
+  "quantization",
+  "metadata",
+  "llm",
+  "llama",
+  "ai",
+  "model",
+  "moonbit",
+]
 
 description = "GGUF model files for MoonBit, read and written."
 
