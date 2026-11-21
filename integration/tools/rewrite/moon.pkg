@@ -1,0 +1,11 @@
+supported_targets = "native"
+
+// Reads a file and writes it back out, byte for byte, for checking that a
+// writer's output is read the same way by another implementation.
+pkgtype(kind: "executable")
+
+import {
+  "moonbitstack/moongguf",
+  "moonbitlang/x/fs",
+  "moonbitlang/core/env",
+}

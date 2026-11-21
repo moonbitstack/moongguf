@@ -1,0 +1,11 @@
+supported_targets = "native"
+
+// The example for a file too large for one `Bytes`: the index is read in
+// chunks that grow until it fits, then each tensor's bytes are read in shards.
+pkgtype(kind: "executable")
+
+import {
+  "moonbitstack/moongguf",
+  "moonbitlang/x/fs",
+  "moonbitlang/core/env",
+}

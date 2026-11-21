@@ -7,3 +7,9 @@ target/
 
 # Examples are read in the repository and run in CI; they do not ship.
 src/examples/
+
+# Programs that read files for the checks: the library itself has no I/O.
+integration/
+
+# A workspace file ties the module to those programs; it is not published.
+moon.work

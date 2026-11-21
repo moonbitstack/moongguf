@@ -1,0 +1,11 @@
+supported_targets = "native"
+
+// Prints the dump of a GGUF file as JSON, for comparing against another
+// implementation's read of the same file.
+pkgtype(kind: "executable")
+
+import {
+  "moonbitstack/moongguf",
+  "moonbitlang/x/fs",
+  "moonbitlang/core/env",
+}
