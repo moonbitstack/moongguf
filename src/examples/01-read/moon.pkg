@@ -1,0 +1,7 @@
+// Reading a file: the metadata table, the tensor index, and the bytes of a
+// tensor without copying them.
+pkgtype(kind: "executable")
+
+import {
+  "moonbitstack/moongguf",
+}

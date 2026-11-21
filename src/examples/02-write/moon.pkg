@@ -1,0 +1,7 @@
+// Writing a file: metadata, a tensor and the alignment that the data section
+// starts on.
+pkgtype(kind: "executable")
+
+import {
+  "moonbitstack/moongguf",
+}

@@ -1,0 +1,7 @@
+// A file too large for one `Bytes`: the index on its own, then a tensor's
+// bytes a piece at a time.
+pkgtype(kind: "executable")
+
+import {
+  "moonbitstack/moongguf",
+}
