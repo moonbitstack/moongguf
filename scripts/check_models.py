@@ -57,7 +57,7 @@ MODELS = [
         name="qwen2.5-0.5b-instruct-q2_k",
         repository="Qwen/Qwen2.5-0.5B-Instruct-GGUF",
         file="qwen2.5-0.5b-instruct-q2_k.gguf",
-        sha256="",
+        sha256="9ee36184e616dfc76df4f5dd66f908dbde6979524ae36e6cefb67f532f798cb8",
         size=415_182_688,
     ),
 ]

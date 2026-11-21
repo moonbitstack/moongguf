@@ -20,24 +20,16 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
-import subprocess
 import sys
 import tempfile
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import make_vectors  # noqa: E402
+import moon_tools  # noqa: E402
 from gguf_reference import Checker, compare_dumps, reference_dump  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
-
-
-def run(binary: Path, *args: str) -> str:
-    done = subprocess.run([str(binary), *args], capture_output=True, text=True)
-    if done.returncode != 0:
-        raise SystemExit(f"{binary.name} {' '.join(args)} failed:\n{done.stdout}{done.stderr}")
-    return done.stdout
 
 
 def main() -> int:
@@ -47,20 +39,8 @@ def main() -> int:
     args = parser.parse_args()
 
     work = Path(tempfile.mkdtemp(prefix="moongguf-interop-"))
-    print(f"building the tools in {work}")
-    build = subprocess.run(
-        [args.moon, "build", "--target", "native",
-         "integration/tools/dump", "integration/tools/rewrite"],
-        cwd=ROOT, capture_output=True, text=True)
-    if build.returncode != 0:
-        raise SystemExit("moon build failed:\n" + build.stdout + build.stderr)
-    built = ROOT / "_build" / "native" / "debug" / "build" / "moonbitstack" / "moongguf-tools"
-    suffix = ".exe" if os.name == "nt" else ""
-    dump_tool = built / "dump" / f"dump{suffix}"
-    rewrite_tool = built / "rewrite" / f"rewrite{suffix}"
-    for tool in (dump_tool, rewrite_tool):
-        if not tool.exists():
-            raise SystemExit(f"{tool} was not built")
+    print(f"comparing in {work}")
+    tools = moon_tools.build(args.moon)
 
     vectors = make_vectors.build(work, work / "json")
     check = Checker()
@@ -72,13 +52,13 @@ def main() -> int:
         # `gguf-py` reads neither version 1 nor the two encodings newer than it.
         if reference.exists():
             readable += 1
-            compare_dumps(check, name, json.loads(run(dump_tool, str(path))),
+            compare_dumps(check, name, json.loads(tools.run("dump", str(path))),
                           json.loads(reference.read_text(encoding="utf-8")))
         if name in ("version-1", "version-2"):
             # Versions 1 and 2 are read-only: only version 3 is written.
             continue
         again = work / f"{name}.again.gguf"
-        run(rewrite_tool, str(path), str(again))
+        tools.run("rewrite", str(path), str(again))
         if not again.exists():
             raise SystemExit(f"{name} was not written back")
         if again.read_bytes() != path.read_bytes():
@@ -86,7 +66,7 @@ def main() -> int:
         if reference.exists():
             rewritten += 1
             compare_dumps(check, f"{name} written back",
-                          json.loads(run(dump_tool, str(again))),
+                          json.loads(tools.run("dump", str(again))),
                           reference_dump(again))
 
     print(f"{len(vectors)} files, {readable} compared with gguf-py, "

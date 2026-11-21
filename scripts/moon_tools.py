@@ -29,7 +29,7 @@ class Tools:
         found = sorted(self.build.rglob(f"{name}{self.suffix}"))
         if not found:
             raise SystemExit(
-                f"{name} was not built; the build said://n{self.output}")
+                f"{name} was not built; the build said:\n{self.output}")
         return found[-1]
 
     def run(self, name: str, *args: str) -> str:
@@ -46,7 +46,7 @@ def build(moon: str = "moon") -> Tools:
         [moon, "build", "--target", "native",
          *[f"integration/tools/{name}" for name in sorted(TOOLS)]],
         cwd=ROOT, capture_output=True, text=True)
+    output = done.stdout + done.stderr
     if done.returncode != 0:
-        raise SystemExit("moon build failed:\n" + done.stdout + done.stderr)
-    return Tools(ROOT / "_build" / "native" / "debug" / "build" / "moonbitstack"
-                 / "moongguf-tools")
+        raise SystemExit("moon build failed:\n" + output)
+    return Tools(ROOT / "_build", output)
