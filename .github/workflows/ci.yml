@@ -108,23 +108,22 @@ jobs:
           moon version --all
           moon update
 
+      # A virtual environment of its own: the runner's Python is not ours to
+      # install into, and the versions here are pinned.
       - name: install the reference implementation
-        run: python3 -m pip install -r scripts/requirements.txt
+        run: |
+          python3 -m venv .venv
+          .venv/bin/python -m pip install --upgrade pip
+          .venv/bin/python -m pip install -r scripts/requirements.txt
 
       - name: the committed vectors are what the generator writes
-        run: python3 scripts/make_vectors.py --check
+        run: .venv/bin/python scripts/make_vectors.py --check
 
       - name: every field against the reference, both ways
-        run: python3 scripts/check_interop.py
-
-      - name: keep the models between runs
-        uses: actions/cache@v4
-        with:
-          path: _build/models
-          key: models-v1
+        run: .venv/bin/python scripts/check_interop.py
 
       - name: two real models, field by field
-        run: python3 scripts/check_models.py
+        run: .venv/bin/python scripts/check_models.py
 
   # Breaking the library on purpose: a mutation no test notices means the suite
   # does not cover what it claims to.

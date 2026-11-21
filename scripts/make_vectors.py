@@ -24,6 +24,7 @@ from __future__ import annotations
 import argparse
 import json
 import struct
+import subprocess
 import sys
 from pathlib import Path
 
@@ -385,18 +386,25 @@ def main() -> int:
                         help="write the files here as well, for the interop check")
     parser.add_argument("--json", type=Path, default=None,
                         help="write the reference dump of each file here")
+    parser.add_argument("--moon", default="moon",
+                        help="used to format the generated source")
     parser.add_argument("--check", action="store_true",
                         help="fail if the generated source is out of date")
     args = parser.parse_args()
     out = args.out or Path(__file__).resolve().parent / ".." / "_build" / "vectors"
     files = build(out.resolve(), args.json)
-    before = VECTORS.read_text(encoding="utf-8") if VECTORS.exists() else ""
     emit(files)
-    after = VECTORS.read_text(encoding="utf-8")
-    if args.check and before != after:
-        print(f"{VECTORS.relative_to(ROOT)} is out of date", file=sys.stderr)
-        VECTORS.write_text(before, encoding="utf-8", newline="\n")
-        return 1
+    # The file is checked in as `moon fmt` leaves it, so that the lint step and
+    # this one agree on what it should look like.
+    subprocess.run([args.moon, "fmt"], cwd=ROOT, capture_output=True)
+    if args.check:
+        done = subprocess.run(
+            ["git", "diff", "--exit-code", "--", VECTORS.relative_to(ROOT).as_posix()],
+            cwd=ROOT, capture_output=True, text=True)
+        if done.returncode != 0:
+            print(f"{VECTORS.relative_to(ROOT)} is out of date://n{done.stdout}",
+                  file=sys.stderr)
+            return 1
     print(f"{len(files)} files, {sum(len(v) for v in files.values())} bytes")
     return 0
 
