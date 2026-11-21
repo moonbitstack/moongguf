@@ -10,19 +10,32 @@ license = "Apache-2.0"
 
 keywords = [
   "gguf",
+  "ggufv3",
   "ggml",
+  "gguf-parser",
+  "gguf-writer",
   "model-file",
+  "model-weights",
   "weights",
-  "tensor",
+  "tensor-index",
+  "tensor-metadata",
   "quantization",
+  "quantized-tensors",
+  "block-size",
   "metadata",
   "llm",
   "llama",
+  "mamba",
+  "qwen",
+  "inference",
   "ai",
   "model",
+  "binary-format",
+  "little-endian",
+  "mmap",
   "moonbit",
 ]
 
-description = "GGUF model files for MoonBit, read and written."
+description = "GGUF model files for MoonBit: metadata, the tensor index and the weights, read and written."
 
 source = "src"

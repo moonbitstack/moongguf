@@ -1,2 +1,6 @@
-// What this package implements, and a first-hand link to the specification it
-// implements. A package without that link is not finished.
+// GGUF, the model file format `ggml` defines: its header, metadata table,
+// tensor index and data section, read and written by byte.
+// The specification: https://github.com/ggml-org/ggml/blob/master/docs/gguf.md
+import {
+  "moonbitlang/core/encoding/utf8",
+}

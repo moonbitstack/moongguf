@@ -1,0 +1,3 @@
+# The reference implementation the vectors and the interop check are made with.
+gguf==0.19.0
+numpy==2.3.4

@@ -1,12 +1,245 @@
 // Generated using `moon info`, DON'T EDIT IT
 package "moonbitstack/moongguf"
 
+import {
+  "moonbitlang/core/debug",
+  "moonbitlang/core/json",
+}
+
 // Values
-pub fn greet(StringView) -> String
+pub fn is_gguf(BytesView) -> Bool
+
+pub let limits : Limits
+
+pub let magic : Bytes
 
 // Errors
+#derive(Eq, @debug.Debug)
+pub(all) suberror Refused {
+  Truncated(at~ : Int64, want~ : Int32, got~ : Int32)
+  Magic(got~ : Bytes)
+  Version(got~ : UInt32)
+  ReadOnly(version~ : Version)
+  Untyped(got~ : UInt32)
+  Unencoded(got~ : UInt32)
+  Entries(limit~ : Int32, got~ : Int32)
+  Tensors(limit~ : Int32, got~ : Int32)
+  Text(limit~ : Int32, got~ : Int32)
+  Items(limit~ : Int32, got~ : Int32)
+  Nesting(limit~ : Int32, got~ : Int32)
+  Alignment(got~ : UInt32)
+  Duplicate(name~ : String)
+  Missing(name~ : String)
+  Blocks(name~ : String, block~ : Int32, got~ : UInt64)
+  Dims(limit~ : Int32, got~ : Int32)
+  Volume(name~ : String)
+  Malformed(at~ : Int64)
+  Mismatch(at~ : Int64, want~ : ValueType, got~ : ValueType)
+  Offset(name~ : String, want~ : UInt64, got~ : UInt64)
+  Absent(name~ : String)
+  Short(name~ : String, want~ : Int64, got~ : Int64)
+  Large(limit~ : Int32, got~ : Int64)
+  Empty
+}
+pub fn Refused::output(Self, &Logger) -> Unit
+pub fn Refused::to_string(Self) -> String
+pub impl Show for Refused
 
 // Types and methods
+#derive(Eq, @debug.Debug)
+pub(all) enum ByteOrder {
+  Little
+  Big
+}
+
+#derive(Eq, @debug.Debug)
+pub(all) struct Entry {
+  key : String
+  value : Value
+  at : Int64
+}
+
+#derive(Eq, @debug.Debug)
+pub(all) struct Extent {
+  at : Int64
+  length : Int64
+}
+
+pub struct File {
+  // private fields
+}
+pub fn File::add(Self, Tensor, BytesView) -> Unit raise Refused
+pub fn File::add_index(Self, Tensor) -> Unit raise Refused
+pub fn File::alignment(Self) -> UInt32
+pub fn File::data(Self, StringView) -> BytesView?
+pub fn File::data_start(Self) -> Int64 raise Refused
+pub fn File::encode(Self) -> Bytes raise Refused
+pub fn File::encode_index(Self) -> Bytes raise Refused
+pub fn File::extent(Self, StringView) -> Extent raise Refused
+pub fn File::get(Self, StringView) -> Value?
+pub fn File::header(Self) -> Header
+pub fn File::meta(Self) -> Meta
+pub fn File::new(alignment? : UInt32) -> Self
+pub fn File::order(Self) -> ByteOrder
+pub fn File::parse(BytesView, limits? : Limits) -> Self raise Refused
+pub fn File::remove(Self, StringView) -> Unit
+pub fn File::set(Self, String, Value) -> Unit raise Refused
+pub fn File::shard(Self, StringView, BytesView, at? : Int64) -> BytesView raise Refused
+pub fn File::tensor(Self, StringView) -> Tensor?
+pub fn File::tensor_count(Self) -> Int32
+pub fn File::tensors(Self) -> ArrayView[Tensor]
+pub fn File::to_json(Self) -> @json.Json
+pub fn File::version(Self) -> Version
+pub impl @json.ToJson for File
+
+#derive(Eq, @debug.Debug)
+pub(all) enum GgmlType {
+  F32
+  F16
+  Q4_0
+  Q4_1
+  Q5_0
+  Q5_1
+  Q8_0
+  Q8_1
+  Q2_K
+  Q3_K
+  Q4_K
+  Q5_K
+  Q6_K
+  Q8_K
+  IQ2_XXS
+  IQ2_XS
+  IQ3_XXS
+  IQ1_S
+  IQ4_NL
+  IQ3_S
+  IQ2_S
+  IQ4_XS
+  I8
+  I16
+  I32
+  I64
+  F64
+  IQ1_M
+  BF16
+  TQ1_0
+  TQ2_0
+  MXFP4
+  NVFP4
+  Q1_0
+  Q2_0
+  F8_E4M3
+}
+pub fn GgmlType::all() -> Array[Self]
+pub fn GgmlType::block_size(Self) -> Int32
+pub fn GgmlType::bytes_per_block(Self) -> Int32
+pub fn GgmlType::code(Self) -> UInt32
+pub fn GgmlType::is_quantized(Self) -> Bool
+pub fn GgmlType::name(Self) -> String
+pub fn GgmlType::of(UInt32) -> Self?
+
+#derive(Eq, @debug.Debug)
+pub(all) struct Header {
+  version : Version
+  tensors : Int32
+  entries : Int32
+}
+
+#derive(Eq, @debug.Debug)
+pub(all) struct Limits {
+  entries : Int32
+  tensors : Int32
+  text : Int32
+  items : Int32
+  depth : Int32
+}
+
+pub struct Meta {
+  // private fields
+}
+pub fn Meta::contains(Self, StringView) -> Bool
+pub fn Meta::count(Self) -> Int32
+pub fn Meta::entries(Self) -> ArrayView[Entry]
+pub fn Meta::entry(Self, StringView) -> Entry?
+pub fn Meta::flag(Self, StringView) -> Bool?
+pub fn Meta::float(Self, StringView) -> Double?
+pub fn Meta::get(Self, StringView) -> Value?
+pub fn Meta::int(Self, StringView) -> Int64?
+pub fn Meta::items(Self, StringView) -> Array[Value]?
+pub fn Meta::text(Self, StringView) -> String?
+pub fn Meta::uint(Self, StringView) -> UInt64?
+
+#derive(Eq, @debug.Debug)
+pub struct Tensor {
+  // private fields
+}
+pub fn Tensor::at(Self) -> Int64
+pub fn Tensor::byte_length(Self) -> Int64 raise Refused
+pub fn Tensor::data(Self) -> BytesView?
+pub fn Tensor::dims(Self) -> ArrayView[UInt64]
+pub fn Tensor::extent(Self) -> Extent raise Refused
+pub fn Tensor::kind(Self) -> GgmlType
+pub fn Tensor::n_elements(Self) -> UInt64 raise Refused
+pub fn Tensor::name(Self) -> String
+pub fn Tensor::new(name~ : String, kind~ : GgmlType, dims~ : Array[UInt64]) -> Self
+
+#derive(Eq, @debug.Debug)
+pub(all) enum Value {
+  UInt8(UInt32)
+  Int8(Int32)
+  UInt16(UInt32)
+  Int16(Int32)
+  UInt32(UInt32)
+  Int32(Int32)
+  Float32(Float)
+  Bool(Bool)
+  String(String)
+  Array(ValueType, Array[Value])
+  UInt64(UInt64)
+  Int64(Int64)
+  Float64(Double)
+}
+pub fn Value::as_bool(Self) -> Bool?
+pub fn Value::as_float(Self) -> Double?
+pub fn Value::as_int(Self) -> Int64?
+pub fn Value::as_items(Self) -> Array[Self]?
+pub fn Value::as_text(Self) -> String?
+pub fn Value::as_uint(Self) -> UInt64?
+pub fn Value::items(ValueType, Array[Self]) -> Self
+pub fn Value::text(String) -> Self
+pub fn Value::to_json(Self) -> @json.Json
+pub fn Value::value_type(Self) -> ValueType
+pub impl @json.ToJson for Value
+
+#derive(Eq, @debug.Debug)
+pub(all) enum ValueType {
+  UInt8
+  Int8
+  UInt16
+  Int16
+  UInt32
+  Int32
+  Float32
+  Bool
+  String
+  Array
+  UInt64
+  Int64
+  Float64
+}
+pub fn ValueType::code(Self) -> UInt32
+pub fn ValueType::name(Self) -> String
+pub fn ValueType::of(UInt32) -> Self?
+
+#derive(Eq, @debug.Debug)
+pub(all) enum Version {
+  V1
+  V2
+  V3
+}
+pub fn Version::code(Self) -> UInt32
+pub fn Version::of(UInt32) -> Self?
 
 // Type aliases
 
