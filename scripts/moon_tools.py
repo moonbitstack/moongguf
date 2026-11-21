@@ -21,21 +21,22 @@ class Tools:
     def __init__(self, build: Path, output: str) -> None:
         self.build = build
         self.output = output
-        self.suffix = ".exe" if os.name == "nt" else ""
 
     def path(self, name: str) -> Path:
         if name not in TOOLS:
             raise KeyError(name)
         # The native target only: a wasm build leaves a file of the same name
-        # that is not a program.
-        found = sorted(
-            path for path in (self.build / "native").rglob(f"{name}{self.suffix}")
-            if path.is_file() and os.access(path, os.X_OK)
-        )
-        if not found:
-            raise SystemExit(
-                f"{name} was not built; the build said:\n{self.output}")
-        return found[-1]
+        # that is not a program. The toolchain writes `.exe` on every system, so
+        # both spellings are looked for.
+        for spelling in (f"{name}.exe", name):
+            found = sorted(
+                path for path in (self.build / "native").rglob(spelling)
+                if path.is_file() and os.access(path, os.X_OK)
+            )
+            if found:
+                return found[-1]
+        raise SystemExit(
+            f"{name} was not built; the build said:\n{self.output}")
 
     def run(self, name: str, *args: str) -> str:
         done = subprocess.run([str(self.path(name)), *args],
