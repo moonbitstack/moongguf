@@ -16,19 +16,21 @@ TOOLS = {"dump", "rewrite", "read-chunks"}
 
 
 class Tools:
-    """The built tools, by name."""
+    """The built tools, by name, found wherever the toolchain put them."""
 
-    def __init__(self, built: Path) -> None:
-        self.built = built
+    def __init__(self, build: Path, output: str) -> None:
+        self.build = build
+        self.output = output
         self.suffix = ".exe" if os.name == "nt" else ""
 
     def path(self, name: str) -> Path:
         if name not in TOOLS:
             raise KeyError(name)
-        found = (self.built / name / f"{name}{self.suffix}")
-        if not found.exists():
-            raise SystemExit(f"{found} was not built")
-        return found
+        found = sorted(self.build.rglob(f"{name}{self.suffix}"))
+        if not found:
+            raise SystemExit(
+                f"{name} was not built; the build said://n{self.output}")
+        return found[-1]
 
     def run(self, name: str, *args: str) -> str:
         done = subprocess.run([str(self.path(name)), *args],
