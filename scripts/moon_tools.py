@@ -26,7 +26,12 @@ class Tools:
     def path(self, name: str) -> Path:
         if name not in TOOLS:
             raise KeyError(name)
-        found = sorted(self.build.rglob(f"{name}{self.suffix}"))
+        # The native target only: a wasm build leaves a file of the same name
+        # that is not a program.
+        found = sorted(
+            path for path in (self.build / "native").rglob(f"{name}{self.suffix}")
+            if path.is_file() and os.access(path, os.X_OK)
+        )
         if not found:
             raise SystemExit(
                 f"{name} was not built; the build said:\n{self.output}")
