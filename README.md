@@ -58,10 +58,10 @@ round trip.
 
 ## Reading
 
-The library deals in bytes, not in files: a caller that has read a file, fetched
-a range, or mapped a buffer hands the bytes over. A file is parsed in one call,
-and the tensor data stays where it is — `data` returns a view into the bytes that
-were passed in.
+Those bytes are what a file is; this is what a reader does with them. The library
+deals in bytes, not in files: a caller that has read a file, fetched a range, or
+mapped a buffer hands the bytes over. A file is parsed in one call, and the tensor
+data stays where it is — `data` returns a view into the bytes that were passed in.
 
 ```moonbit
 let file = @moongguf.File::parse(bytes[:])
