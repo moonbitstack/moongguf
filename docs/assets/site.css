@@ -692,10 +692,6 @@ mark {
   transition: transform 0.4s var(--spring);
 }
 
-.plate-cells span:hover {
-  transform: translateY(-2px);
-}
-
 .plate-ascii {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -912,19 +908,6 @@ mark {
   border-top: 1px solid var(--line);
 }
 
-.eyebrow,
-.num,
-.step-num,
-.code-head,
-.map-at,
-.tick,
-.pane-head,
-.seg-tag,
-.plate-at,
-.legend,
-.section-head .kicker {
-  user-select: none;
-}
 
 .tick {
   position: absolute;
@@ -2769,4 +2752,73 @@ select {
   font-size: 11.5px;
   line-height: 1.45;
   color: var(--ink-3);
+}
+
+/* ——— what is not text ———————————————————————————————————————————
+   A control, a label, a number in the margin or a drawing is not a passage:
+   dragging across it should do nothing, so that grabbing the page — or the
+   byte lane — never leaves a reader holding half a button instead. Prose,
+   code, signatures and the values a reader came for stay selectable, and the
+   hex box and the search fields stay editable. */
+
+.brand,
+.nav a,
+.icon-button,
+.toc a,
+.api-nav a,
+.footer-links a,
+.button,
+.chip,
+.filter,
+.mini-button,
+.enc,
+.steps button,
+.lane-key button,
+.eyebrow,
+.num,
+.step-num,
+.kind,
+.rec-type,
+.pane-head,
+.code-head,
+.map-head,
+.legend,
+.map-at,
+.map,
+.ribbon,
+.ribbon-readout,
+.scan-lane,
+.scan-hint,
+.scan-part,
+.plate,
+.plate-at,
+.plate-cells,
+.plate-ascii,
+.seg-tag,
+.bar-label,
+.lane-seg span,
+.tick,
+.section-head .kicker,
+.play-verdict,
+.enc-name small {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Decoration that a pointer should pass straight through. */
+.swatch,
+.brand-bars,
+.brand-bars i,
+.seg .bar,
+.lane-seg::after,
+.scan-head,
+.plate-cells span,
+.plate-ascii span,
+.icon-button svg,
+.block-row .blocks i,
+.bit-track,
+.enc-meter {
+  user-select: none;
+  -webkit-user-select: none;
+  pointer-events: none;
 }
