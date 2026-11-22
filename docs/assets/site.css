@@ -2800,7 +2800,13 @@ select {
 .tick,
 .section-head .kicker,
 .play-verdict,
-.enc-name small {
+.enc-name small,
+.ribbon-head,
+.scan-panel,
+.rec,
+.rec-key,
+.rec-value,
+.play-body {
   user-select: none;
   -webkit-user-select: none;
 }
