@@ -8,6 +8,9 @@ target/
 # Examples are read in the repository and run in CI; they do not ship.
 src/examples/
 
+# The pages' engine, built by the docs workflow from `src/examples/browser/`.
+docs/engine/
+
 # Programs that read files for the checks: the library itself has no I/O.
 integration/
 

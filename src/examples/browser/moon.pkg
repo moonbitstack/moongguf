@@ -1,0 +1,17 @@
+// What the documentation page calls: one entry point per thing the page asks
+// the library, each returning JSON text the page reads. Compiled to a module
+// for the browser by the docs workflow; not part of the library.
+supported_targets = "js"
+
+import {
+  "moonbitstack/moongguf",
+}
+
+options(
+  link: {
+    "js": {
+      "exports": [ "encodings", "value_types", "sample_file", "inspect_hex" ],
+      "format": "esm",
+    },
+  },
+)
