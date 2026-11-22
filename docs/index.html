@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>moongguf — every byte of a GGUF file</title>
+    <meta
+      name="description"
+      content="A MoonBit library that reads and writes GGUF model files: the header, the metadata table, the tensor index, and the weights behind them."
+    />
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/site.css" />
+    <script src="assets/theme.js"></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="wrap">
+        <a class="brand" href="./" aria-label="moongguf, home">
+          <span class="brand-bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+          <span class="brand-name">moongguf</span>
+        </a>
+        <nav class="nav" aria-label="Sections">
+          <a href="./" aria-current="page">Home</a>
+          <a href="guide.html">Guide</a>
+          <a href="anatomy.html" class="hide-sm">Anatomy</a>
+          <a href="api.html">API</a>
+          <a
+            class="icon-button"
+            href="https://github.com/moonbitstack/moongguf"
+            aria-label="Source on GitHub"
+            title="Source on GitHub"
+          >
+            <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+              <path
+                d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.4 7.4 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"
+              />
+            </svg>
+          </a>
+          <button class="icon-button theme-toggle" type="button" aria-label="Switch theme">
+            <svg class="sun" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+              <circle cx="8" cy="8" r="3.1" />
+              <path d="M8 1v1.6M8 13.4V15M1 8h1.6M13.4 8H15M3.05 3.05l1.13 1.13M11.82 11.82l1.13 1.13M12.95 3.05l-1.13 1.13M4.18 11.82l-1.13 1.13" />
+            </svg>
+            <svg class="moon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+              <path d="M13.4 9.6A5.9 5.9 0 0 1 6.4 2.6a5.9 5.9 0 1 0 7 7Z" />
+            </svg>
+          </button>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="wrap">
+          <div class="hero-grid">
+            <div>
+              <p class="eyebrow">GGUF · version 3 · MoonBit</p>
+              <h1 style="margin-top: 16px">
+                Every byte of a<br />
+                <span class="swipe">GGUF file</span>.
+              </h1>
+              <p class="lede" style="margin-top: 22px">
+                The header, the metadata table, the tensor index, and the quantised
+                blocks behind them — read from bytes, written back byte for byte, and
+                handed over without a copy.
+              </p>
+              <div class="hero-actions">
+                <a class="button button-solid" href="guide.html">
+                  Read the guide
+                  <svg class="arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+                    <path d="M2.5 7h9M8 3.5 11.5 7 8 10.5" />
+                  </svg>
+                </a>
+                <a class="button button-ghost" href="api.html">API reference</a>
+              </div>
+              <div class="hero-meta">
+                <span class="chip"><b data-stat="encodings">—</b> encodings</span>
+                <span class="chip"><b data-stat="kinds">—</b> value kinds</span>
+                <span class="chip">versions 1–3 read</span>
+                <span class="chip">v3 written</span>
+              </div>
+            </div>
+            <aside class="plate" aria-label="The four bytes every file starts with">
+              <div class="plate-at"><span>byte 0</span><span>magic</span></div>
+              <div class="plate-cells" aria-hidden="true">
+                <span>47</span><span>47</span><span>55</span><span>46</span>
+              </div>
+              <div class="plate-ascii" aria-hidden="true">
+                <span>G</span><span>G</span><span>U</span><span>F</span>
+              </div>
+              <p class="plate-note">
+                Every file begins with these four bytes. A reader that does not find
+                them stops before allocating anything.
+              </p>
+            </aside>
+          </div>
+
+          <figure class="ribbon-card" data-rise>
+            <figcaption class="ribbon-head">
+              <span class="eyebrow" style="letter-spacing: 0.12em">a file, to scale</span>
+              <span class="file">sample.gguf</span>
+              <span class="size" data-ribbon-size>reading…</span>
+            </figcaption>
+            <div class="ribbon" data-ribbon aria-label="The parts of the sample file"></div>
+            <p class="ribbon-readout" data-readout>reading…</p>
+          </figure>
+        </div>
+      </section>
+
+      <section class="section" id="parts">
+        <div class="wrap">
+          <div class="section-head" data-rise>
+            <div class="kicker"><span class="eyebrow">§ 01 — the shape of it</span></div>
+            <h2>Four parts, one file.</h2>
+            <p>
+              A GGUF file is a small directory followed by a lot of weights. The
+              directory holds everything a reader needs to answer questions about a
+              model without touching a single weight.
+            </p>
+          </div>
+          <div class="parts">
+            <article class="part" data-part="head" data-rise>
+              <span class="num">01 / HEADER</span>
+              <h3>The header</h3>
+              <p>
+                Four bytes of magic, the version, and two counts. Twenty-four bytes
+                that say how much is coming.
+              </p>
+              <span class="call"><em>fn</em> is_gguf(bytes)</span>
+            </article>
+            <article class="part" data-part="meta" data-rise>
+              <span class="num">02 / METADATA</span>
+              <h3>The metadata table</h3>
+              <p>
+                Key–value pairs the format types: architecture, layer count, the
+                vocabulary. Thirteen kinds, arrays and arrays of arrays among them.
+              </p>
+              <span class="call">file.meta().text(<em>"general.architecture"</em>)</span>
+            </article>
+            <article class="part" data-part="index" data-rise>
+              <span class="num">03 / TENSOR INDEX</span>
+              <h3>The tensor index</h3>
+              <p>
+                One entry per tensor: its name, its shape in <code>ggml</code>'s
+                order, its encoding, and where its bytes begin.
+              </p>
+              <span class="call">file.tensor(<em>"token_embd.weight"</em>)</span>
+            </article>
+            <article class="part" data-part="data" data-rise>
+              <span class="num">04 / DATA</span>
+              <h3>The data section</h3>
+              <p>
+                The weights, block after block, each row a whole number of blocks. Read
+                as a view into the bytes you already have.
+              </p>
+              <span class="call">file.data(<em>"token_embd.weight"</em>)</span>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="ask">
+        <div class="wrap">
+          <div class="section-head" data-rise>
+            <div class="kicker"><span class="eyebrow">§ 02 — a file, read here</span></div>
+            <h2>Ask a file what it holds.</h2>
+            <p>
+              Paste the hex of a file, or drop a <code>.gguf</code> from your disk. The
+              library on this page is this repository compiled to JavaScript: the same
+              parser, the same refusals, the same numbers.
+            </p>
+          </div>
+
+          <div class="play" data-rise>
+            <div class="play-pane">
+              <div class="pane-head">
+                <span>bytes</span>
+                <span class="spacer"></span>
+                <label class="mini-button" for="file-pick">open a file</label>
+                <input id="file-pick" type="file" accept=".gguf,application/octet-stream" hidden data-play-file />
+                <button class="mini-button" type="button" data-play-sample>sample</button>
+                <button class="mini-button mini-button-solid" type="button" data-play-run>parse</button>
+              </div>
+              <textarea
+                class="play-input scroll"
+                spellcheck="false"
+                aria-label="The bytes of a file, in hex"
+                data-play-input
+              ></textarea>
+              <div class="play-verdict" data-play-verdict>reading…</div>
+            </div>
+
+            <div class="play-pane">
+              <div class="pane-head">
+                <span>what the library read</span>
+              </div>
+              <div class="play-body scroll" data-play-list></div>
+            </div>
+          </div>
+
+          <div class="map-card" data-rise>
+            <div class="map-head">
+              <span>byte map</span>
+              <span data-map-note></span>
+              <span class="legend">
+                <span><i class="swatch swatch-head"></i>header</span>
+                <span><i class="swatch swatch-meta"></i>metadata</span>
+                <span><i class="swatch swatch-index"></i>index</span>
+                <span><i class="swatch swatch-data"></i>data</span>
+              </span>
+            </div>
+            <div class="map scroll" data-map></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="encodings">
+        <div class="wrap">
+          <div class="section-head" data-rise>
+            <div class="kicker"><span class="eyebrow">§ 03 — the table</span></div>
+            <h2>Every encoding, one table.</h2>
+            <p>
+              A tensor's bytes are blocks: so many values, so many bytes. The library
+              carries the whole table, from <code>F32</code> to <code>F8_E4M3</code>,
+              and uses it to check that a row is a whole number of blocks.
+            </p>
+          </div>
+
+          <div class="catalogue-bar" data-rise>
+            <label class="field">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <circle cx="7" cy="7" r="4.2" />
+                <path d="m10.2 10.2 3.3 3.3" />
+              </svg>
+              <input type="search" placeholder="filter by name" aria-label="Filter encodings by name" data-search-enc />
+            </label>
+            <div class="filters" role="group" aria-label="Filter by family">
+              <button class="filter" type="button" data-filter-enc="all" aria-pressed="true">All</button>
+              <button class="filter" type="button" data-filter-enc="float" aria-pressed="false">Float</button>
+              <button class="filter" type="button" data-filter-enc="k" aria-pressed="false">K-quant</button>
+              <button class="filter" type="button" data-filter-enc="i" aria-pressed="false">I-quant</button>
+              <button class="filter" type="button" data-filter-enc="block" aria-pressed="false">Block</button>
+              <button class="filter" type="button" data-filter-enc="packed" aria-pressed="false">Packed</button>
+            </div>
+            <span class="catalogue-count" data-enc-count></span>
+          </div>
+
+          <div class="grid-enc" data-catalogue data-rise></div>
+        </div>
+      </section>
+
+      <section class="section" id="code">
+        <div class="wrap">
+          <div class="section-head" data-rise>
+            <div class="kicker"><span class="eyebrow">§ 04 — in MoonBit</span></div>
+            <h2>Four lines to a weight.</h2>
+            <p>
+              The library deals in bytes, never in files: whatever read the file — a
+              disk, a range request, a mapped buffer — hands the bytes over.
+            </p>
+          </div>
+
+          <div class="code-card" data-rise>
+            <div class="code-head">
+              <span class="dot"></span>
+              <span class="label">moonbit</span>
+              <span class="path">main.mbt</span>
+            </div>
+            <pre class="scroll"><code>let file = @moongguf.File::parse(bytes[:])
+let arch = file.meta().text("general.architecture")
+let extent = file.extent("token_embd.weight")
+let weight = file.data("token_embd.weight")</code></pre>
+          </div>
+
+          <div class="chips" style="margin-top: 22px" data-rise>
+            <a class="chip" href="guide.html"><b>Guide</b> · install, read, write, stream</a>
+            <a class="chip" href="anatomy.html"><b>Anatomy</b> · drag through a file</a>
+            <a class="chip" href="api.html"><b>API</b> · every type and function</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap">
+        <div>
+          <a class="brand" href="./" aria-label="moongguf, home">
+            <span class="brand-bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            <span class="brand-name">moongguf</span>
+          </a>
+          <p class="footer-note" style="margin-top: 12px">
+            GGUF v3 read and written, versions 1 and 2 read. The format is
+            <a href="https://github.com/ggml-org/ggml/blob/master/docs/gguf.md">specified</a>
+            by <code>ggml</code>.
+          </p>
+        </div>
+        <nav class="footer-links" aria-label="Elsewhere">
+          <a href="https://github.com/moonbitstack/moongguf">GitHub</a>
+          <a href="https://mooncakes.io/docs/moonbitstack/moongguf">mooncakes</a>
+          <a href="guide.html">Guide</a>
+          <a href="api.html">API</a>
+          <a href="https://github.com/moonbitstack/moongguf/blob/master/LICENSE">Apache-2.0</a>
+        </nav>
+      </div>
+    </footer>
+
+    <script type="module" src="assets/catalog.js"></script>
+    <script type="module" src="assets/playground.js"></script>
+    <script src="assets/page.js"></script>
+    <script src="assets/code.js"></script>
+  </body>
+</html>
