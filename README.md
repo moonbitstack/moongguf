@@ -1,7 +1,33 @@
-# moongguf
+<div align="center">
 
-GGUF files for MoonBit: the metadata table, the tensor index, and the bytes
-themselves, read and written.
+<h1>moongguf</h1>
+
+<p><b>GGUF files for MoonBit.</b><br>
+The header, the metadata table, the tensor index, and the weights behind them —<br>
+read from bytes, written back byte for byte, handed over without a copy.</p>
+
+<p>
+<a href="https://moonbitstack.github.io/moongguf/"><b>Home</b></a>
+&nbsp;·&nbsp;
+<a href="https://moonbitstack.github.io/moongguf/guide.html"><b>Guide</b></a>
+&nbsp;·&nbsp;
+<a href="https://moonbitstack.github.io/moongguf/api.html"><b>API</b></a>
+&nbsp;·&nbsp;
+<a href="https://moonbitstack.github.io/moongguf/anatomy.html"><b>Anatomy</b></a>
+&nbsp;·&nbsp;
+<a href="https://mooncakes.io/docs/moonbitstack/moongguf"><b>mooncakes</b></a>
+</p>
+
+<table>
+  <tr>
+    <td align="center"><b>1 · 2 · 3</b><br><sub>versions read; 3 written</sub></td>
+    <td align="center"><b>13</b><br><sub>value kinds, arrays nested</sub></td>
+    <td align="center"><b>every</b><br><sub><code>ggml</code> encoding, one table</sub></td>
+    <td align="center"><b>0</b><br><sub>copies of a tensor's bytes</sub></td>
+  </tr>
+</table>
+
+</div>
 
 A GGUF file is what a quantised language model looks like on disk: a header, a
 table of key-value metadata, an index of the tensors, and then the weights, laid
@@ -52,9 +78,9 @@ file.add(
 let bytes = file.encode()
 ```
 
-Reading those bytes back and writing them again gives the same bytes, which is
-the property the tests lean on: an encoding is only right if it survives the
-round trip.
+Reading those bytes back and writing them again gives the same bytes, and that
+is the property the library is built around: an encoding is only right if it
+survives the round trip.
 
 ## Reading
 
