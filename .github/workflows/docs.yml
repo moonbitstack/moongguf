@@ -1,0 +1,60 @@
+name: Docs
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-26.04
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: install moonbit
+        run: |
+          curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash
+          echo "$HOME/.moon/bin" >> "$GITHUB_PATH"
+
+      - uses: actions/configure-pages@v6
+        with:
+          enablement: true
+
+      # The pages do their parsing with the library compiled to JavaScript, so
+      # the engine is built here rather than being kept in the repository.
+      - name: build the engine the pages run
+        run: |
+          moon update
+          moon build --target js --release src/examples/browser
+          mkdir -p docs/engine
+          cp _build/js/release/build/moonbitstack/moongguf/examples/browser/browser.js docs/engine/moongguf.js
+
+      - name: the API reference is what the interface file says
+        run: |
+          python3 scripts/gen_api.py
+          git diff --exit-code -- docs/api.html
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: docs
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-26.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5
