@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>API reference — moongguf</title>
+    <meta
+      name="description"
+      content="Every public type, function and value in moongguf, with the signature as the compiler sees it and the comment as the source writes it."
+    />
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/site.css" />
+    <script src="assets/theme.js"></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="wrap">
+        <a class="brand" href="./" aria-label="moongguf, home">
+          <span class="brand-bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+          <span class="brand-name">moongguf</span>
+        </a>
+        <nav class="nav" aria-label="Sections">
+          <a href="./">Home</a>
+          <a href="guide.html">Guide</a>
+          <a href="anatomy.html" class="hide-sm">Anatomy</a>
+          <a href="api.html" aria-current="page">API</a>
+          <a
+            class="icon-button"
+            href="https://github.com/moonbitstack/moongguf"
+            aria-label="Source on GitHub"
+            title="Source on GitHub"
+          >
+            <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+              <path
+                d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.4 7.4 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"
+              />
+            </svg>
+          </a>
+          <button class="icon-button theme-toggle" type="button" aria-label="Switch theme">
+            <svg class="sun" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+              <circle cx="8" cy="8" r="3.1" />
+              <path d="M8 1v1.6M8 13.4V15M1 8h1.6M13.4 8H15M3.05 3.05l1.13 1.13M11.82 11.82l1.13 1.13M12.95 3.05l-1.13 1.13M4.18 11.82l-1.13 1.13" />
+            </svg>
+            <svg class="moon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+              <path d="M13.4 9.6A5.9 5.9 0 0 1 6.4 2.6a5.9 5.9 0 1 0 7 7Z" />
+            </svg>
+          </button>
+        </nav>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <div class="api">
+        <aside class="api-nav scroll" aria-label="Everything on this page">
+          <label class="field">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <circle cx="7" cy="7" r="4.2" />
+              <path d="m10.2 10.2 3.3 3.3" />
+            </svg>
+            <input
+              type="search"
+              placeholder="find a name"
+              aria-label="Search the reference"
+              data-filter
+            />
+          </label>
+          <ol>
+            <li><span class="group">Values</span></li>
+<li><a href="#limits">limits</a></li>
+<li><a href="#magic">magic</a></li>
+<li><a href="#is_gguf">is_gguf</a></li>
+<li><span class="group">Errors</span></li>
+<li><a href="#refused">Refused</a></li>
+<li><span class="group">Types and methods</span></li>
+<li><a href="#byteorder">ByteOrder</a></li>
+<li><a href="#entry">Entry</a></li>
+<li><a href="#extent">Extent</a></li>
+<li><a href="#file">File</a></li>
+<li><a href="#ggmltype">GgmlType</a></li>
+<li><a href="#header">Header</a></li>
+<li><a href="#limits">Limits</a></li>
+<li><a href="#meta">Meta</a></li>
+<li><a href="#tensor">Tensor</a></li>
+<li><a href="#value">Value</a></li>
+<li><a href="#valuetype">ValueType</a></li>
+<li><a href="#version">Version</a></li>
+          </ol>
+        </aside>
+
+        <div class="api-body">
+          <header class="api-intro">
+            <p class="eyebrow">API reference</p>
+            <h1 style="font-size: clamp(2rem, 1.6rem + 1.8vw, 2.8rem); margin-top: 12px; letter-spacing: -0.04em">
+              moongguf
+            </h1>
+            <p>One package. Files, metadata tables, tensor indexes and the bytes behind them, with a refusal for everything that is not a GGUF file.</p>
+            <p style="margin-top: 12px; font-size: 13px; color: var(--ink-3)">
+              Written from <code>pkg.generated.mbti</code> and the source comments
+              on every build: 82 public names, in three groups.
+            </p>
+          </header>
+          <article class="api-entry" data-track
+ id="limits" data-name="limits">
+<h3><span class="kind">let</span>limits</h3>
+<pre class="sig">pub let limits : Limits</pre><p>The preset a reader starts from: roomy enough for every file published so
+far, tight enough that a corrupt count is refused instead of allocated.</p></article>
+<article class="api-entry" data-track
+ id="magic" data-name="magic">
+<h3><span class="kind">let</span>magic</h3>
+<pre class="sig">pub let magic : Bytes</pre><p>The four bytes every GGUF file starts with.</p></article>
+<article class="api-entry" data-track
+ id="is_gguf" data-name="is_gguf">
+<h3><span class="kind">fn</span>is_gguf</h3>
+<pre class="sig">pub fn is_gguf(BytesView) -&gt; Bool</pre><p>Whether bytes start with the magic, which is all that can be told without
+reading the rest.</p></article>
+<article class="api-entry" data-track id="refused" data-name="refused">
+<h3><span class="kind">suberror</span>Refused</h3>
+<pre class="sig">pub(all) suberror Refused</pre><p>Why bytes are not a GGUF file this library can read, or why a file it holds
+cannot be written.
+
+The variants a caller is meant to act on carry the numbers that explain
+them: a ceiling and what went past it, or the position something was
+expected at and the position found.</p>
+<ul class="variants">
+<li><code>Truncated(at~ : Int64, want~ : Int32, got~ : Int32)</code></li>
+<li><code>Magic(got~ : Bytes)</code></li>
+<li><code>Version(got~ : UInt32)</code></li>
+<li><code>ReadOnly(version~ : Version)</code></li>
+<li><code>Untyped(got~ : UInt32)</code></li>
+<li><code>Unencoded(got~ : UInt32)</code></li>
+<li><code>Entries(limit~ : Int32, got~ : Int32)</code></li>
+<li><code>Tensors(limit~ : Int32, got~ : Int32)</code></li>
+<li><code>Text(limit~ : Int32, got~ : Int32)</code></li>
+<li><code>Items(limit~ : Int32, got~ : Int32)</code></li>
+<li><code>Nesting(limit~ : Int32, got~ : Int32)</code></li>
+<li><code>Alignment(got~ : UInt32)</code></li>
+<li><code>Duplicate(name~ : String)</code></li>
+<li><code>Missing(name~ : String)</code></li>
+<li><code>Blocks(name~ : String, block~ : Int32, got~ : UInt64)</code></li>
+<li><code>Dims(limit~ : Int32, got~ : Int32)</code></li>
+<li><code>Volume(name~ : String)</code></li>
+<li><code>Malformed(at~ : Int64)</code></li>
+<li><code>Mismatch(at~ : Int64, want~ : ValueType, got~ : ValueType)</code></li>
+<li><code>Offset(name~ : String, want~ : UInt64, got~ : UInt64)</code></li>
+<li><code>Absent(name~ : String)</code></li>
+<li><code>Short(name~ : String, want~ : Int64, got~ : Int64)</code></li>
+<li><code>Large(limit~ : Int32, got~ : Int64)</code></li>
+<li><code>Empty</code></li>
+</ul>
+<p>The error is a <code>Show</code>: its text is what a caller prints.</p>
+</article>
+<article class="api-entry" data-track id="byteorder" data-name="byteorder">
+<h3><span class="kind">enum</span>ByteOrder</h3>
+<p>The byte order a file's numbers are stored in. Files are little-endian; a
+big-endian file is one converted for a machine that needs it, and reads and
+writes the same way once this says which it is.</p>
+<pre class="sig">pub(all) enum ByteOrder {</pre>
+<ul class="variants">
+<li><code>Little</code></li>
+<li><code>Big</code></li>
+</ul>
+<p>The type derives <code>Eq</code>, <code>Debug</code>.</p>
+</article>
+<article class="api-entry" data-track id="entry" data-name="entry">
+<h3><span class="kind">struct</span>Entry</h3>
+<p>One metadata pair as it sits in the file: its key, its value, and where the
+pair starts. The position is what a dump of a file shows beside a pair, and
+what tells two pairs with the same key apart when reading a file that has
+them.</p>
+<pre class="sig">pub(all) struct Entry {</pre>
+<ul class="variants">
+<li><code>key : String</code></li>
+<li><code>value : Value</code></li>
+<li><code>at : Int64</code></li>
+</ul>
+<p>The type derives <code>Eq</code>, <code>Debug</code>.</p>
+</article>
+<article class="api-entry" data-track id="extent" data-name="extent">
+<h3><span class="kind">struct</span>Extent</h3>
+<p>Where a tensor's bytes sit: <code>at</code> from the start of the data section, and how
+many bytes they take. The data section itself starts at <code>File::data_start</code>.</p>
+<pre class="sig">pub(all) struct Extent {</pre>
+<ul class="variants">
+<li><code>at : Int64</code></li>
+<li><code>length : Int64</code></li>
+</ul>
+<p>The type derives <code>Eq</code>, <code>Debug</code>.</p>
+</article>
+<article class="api-entry" data-track id="file" data-name="file">
+<h3><span class="kind">struct</span>File</h3>
+<p>A GGUF file: the header, the metadata table, the tensor index, and — when
+the bytes of the data section were handed over with the rest — the tensor
+data itself.
+
+Reading never copies the tensor bytes. <code>data</code> hands out a view into the
+bytes the file was parsed from, so a gigabyte model costs its metadata and
+no more. A file too large for one <code>Bytes</code> is read in two parts: the index
+from the head of the file, and each tensor's bytes as they are needed,
+which <code>shard</code> takes a view of.</p>
+<pre class="sig">pub struct File {</pre>
+<ul class="variants">
+<li><code>// private fields</code></li>
+</ul>
+<div class="member" id="file-add" data-name="file::add">
+<pre class="sig">pub fn File::add(Self, Tensor, BytesView) -&gt; Unit raise Refused</pre>
+<p>Put a tensor into the file, with its bytes. The bytes stay where the caller
+put them: a file holds views, and writing it copies them out once.
+
+The tensor lands at the end of the data section, where the one before it
+ends and the alignment is satisfied.</p>
+</div>
+<div class="member" id="file-add_index" data-name="file::add_index">
+<pre class="sig">pub fn File::add_index(Self, Tensor) -&gt; Unit raise Refused</pre>
+<p>Put a tensor into the file's index without its bytes, for a caller that
+writes the data section itself.</p>
+</div>
+<div class="member" id="file-alignment" data-name="file::alignment">
+<pre class="sig">pub fn File::alignment(Self) -&gt; UInt32</pre>
+<p>The alignment the data section starts on, from <code>general.alignment</code> or the
+format's default of 32.</p>
+</div>
+<div class="member" id="file-data" data-name="file::data">
+<pre class="sig">pub fn File::data(Self, StringView) -&gt; BytesView?</pre>
+<p>The bytes of a tensor, as a view into the bytes the file was parsed from.
+<code>None</code> when those bytes are not in hand — a file parsed from its index alone
+still answers everything about the tensor except its data.</p>
+</div>
+<div class="member" id="file-data_start" data-name="file::data_start">
+<pre class="sig">pub fn File::data_start(Self) -&gt; Int64 raise Refused</pre>
+<p>Where the data section starts: the end of the index, rounded up to the
+alignment.
+
+A file that was read knows this from its own bytes. A file built here finds
+it by writing its index, which is what a caller streaming a large file needs
+before it can place the first tensor.</p>
+</div>
+<div class="member" id="file-encode" data-name="file::encode">
+<pre class="sig">pub fn File::encode(Self) -&gt; Bytes raise Refused</pre>
+<p>The whole file: the index, then every tensor's bytes at the offset the index
+recorded, each followed by the zeroes that reach the alignment.
+
+One <code>Bytes</code> holds the result, so a file past what a <code>Bytes</code> can hold is
+refused rather than truncated: <code>encode_index</code> and <code>add_index</code> are there for
+writing such a file in pieces.</p>
+</div>
+<div class="member" id="file-encode_index" data-name="file::encode_index">
+<pre class="sig">pub fn File::encode_index(Self) -&gt; Bytes raise Refused</pre>
+<p>The index as bytes: the header, the metadata table, the tensor index, and
+the zeroes that bring the length up to the alignment. This is the first part
+of a file, and all of it a reader needs to answer what a model holds without
+its weights.</p>
+</div>
+<div class="member" id="file-extent" data-name="file::extent">
+<pre class="sig">pub fn File::extent(Self, StringView) -&gt; Extent raise Refused</pre>
+<p>Where a tensor's bytes sit and how far they run.</p>
+</div>
+<div class="member" id="file-get" data-name="file::get">
+<pre class="sig">pub fn File::get(Self, StringView) -&gt; Value?</pre>
+<p>The value under a metadata key.</p>
+</div>
+<div class="member" id="file-header" data-name="file::header">
+<pre class="sig">pub fn File::header(Self) -&gt; Header</pre>
+<p>The magic, the version and the two counts.</p>
+</div>
+<div class="member" id="file-meta" data-name="file::meta">
+<pre class="sig">pub fn File::meta(Self) -&gt; Meta</pre>
+<p>The metadata table.</p>
+</div>
+<div class="member" id="file-new" data-name="file::new">
+<pre class="sig">pub fn File::new(alignment? : UInt32) -&gt; Self</pre>
+<p>An empty version 3 file, ready for metadata and tensors to be put into it.
+
+An alignment other than the format's 32 is recorded as <code>general.alignment</code>,
+because a reader would otherwise lay the data section out at 32 and find
+every tensor's bytes in the wrong place.</p>
+</div>
+<div class="member" id="file-order" data-name="file::order">
+<pre class="sig">pub fn File::order(Self) -&gt; ByteOrder</pre>
+<p>The byte order the file's numbers are stored in.</p>
+</div>
+<div class="member" id="file-parse" data-name="file::parse">
+<pre class="sig">pub fn File::parse(BytesView, limits? : Limits) -&gt; Self raise Refused</pre>
+<p>Read a file from its bytes.
+
+The bytes may be the whole file, or just as much of it as holds the index —
+the header, the metadata table and the tensor index. Tensor bytes are only
+needed when something asks for them.</p>
+</div>
+<div class="member" id="file-remove" data-name="file::remove">
+<pre class="sig">pub fn File::remove(Self, StringView) -&gt; Unit</pre>
+<p>Drop a metadata key. Dropping <code>general.alignment</code> puts the alignment back to
+the format's 32.</p>
+</div>
+<div class="member" id="file-set" data-name="file::set">
+<pre class="sig">pub fn File::set(Self, String, Value) -&gt; Unit raise Refused</pre>
+<p>Put a value under a metadata key, replacing one already there.
+
+<code>general.alignment</code> is the one key with a meaning beyond its value: setting
+it moves where the data section starts, so the tensors after it move too.
+Only a power of two fits.</p>
+</div>
+<div class="member" id="file-shard" data-name="file::shard">
+<pre class="sig">pub fn File::shard(Self, StringView, BytesView, at? : Int64) -&gt; BytesView raise Refused</pre>
+<p>A view of a tensor's bytes read from somewhere else — the second half of
+reading a file too large for one <code>Bytes</code>, where the caller holds the data
+section in pieces.
+
+<code>at</code> is how far into the tensor the piece starts, so a tensor larger than
+one <code>Bytes</code> can be handed over in pieces of whatever size the caller can
+hold. The piece is checked against the tensor's extent and the part that
+belongs to the tensor is returned, padding and all dropped.</p>
+</div>
+<div class="member" id="file-tensor" data-name="file::tensor">
+<pre class="sig">pub fn File::tensor(Self, StringView) -&gt; Tensor?</pre>
+<p>One tensor's index entry.</p>
+</div>
+<div class="member" id="file-tensor_count" data-name="file::tensor_count">
+<pre class="sig">pub fn File::tensor_count(Self) -&gt; Int32</pre>
+<p>How many tensors the index holds.</p>
+</div>
+<div class="member" id="file-tensors" data-name="file::tensors">
+<pre class="sig">pub fn File::tensors(Self) -&gt; ArrayView[Tensor]</pre>
+<p>The tensor index, in file order.</p>
+</div>
+<div class="member" id="file-to_json" data-name="file::to_json">
+<pre class="sig">pub fn File::to_json(Self) -&gt; @json.Json</pre>
+
+</div>
+<div class="member" id="file-version" data-name="file::version">
+<pre class="sig">pub fn File::version(Self) -&gt; Version</pre>
+<p>The version the file is written in.</p>
+</div>
+</article>
+<article class="api-entry" data-track id="ggmltype" data-name="ggmltype">
+<h3><span class="kind">enum</span>GgmlType</h3>
+<p>The encodings a tensor's blocks can be stored in, numbered as <code>ggml</code>
+numbers them. The number is what a file stores, so an encoding keeps its
+number; a file that names a number outside this table is refused rather
+than guessed at.
+
+Reading a tensor's bytes is all this library does. Turning a block of
+<code>q6_k</code> into floats is arithmetic, and lives elsewhere.</p>
+<pre class="sig">pub(all) enum GgmlType {</pre>
+<ul class="variants">
+<li><code>F32</code></li>
+<li><code>F16</code></li>
+<li><code>Q4_0</code></li>
+<li><code>Q4_1</code></li>
+<li><code>Q5_0</code></li>
+<li><code>Q5_1</code></li>
+<li><code>Q8_0</code></li>
+<li><code>Q8_1</code></li>
+<li><code>Q2_K</code></li>
+<li><code>Q3_K</code></li>
+<li><code>Q4_K</code></li>
+<li><code>Q5_K</code></li>
+<li><code>Q6_K</code></li>
+<li><code>Q8_K</code></li>
+<li><code>IQ2_XXS</code></li>
+<li><code>IQ2_XS</code></li>
+<li><code>IQ3_XXS</code></li>
+<li><code>IQ1_S</code></li>
+<li><code>IQ4_NL</code></li>
+<li><code>IQ3_S</code></li>
+<li><code>IQ2_S</code></li>
+<li><code>IQ4_XS</code></li>
+<li><code>I8</code></li>
+<li><code>I16</code></li>
+<li><code>I32</code></li>
+<li><code>I64</code></li>
+<li><code>F64</code></li>
+<li><code>IQ1_M</code></li>
+<li><code>BF16</code></li>
+<li><code>TQ1_0</code></li>
+<li><code>TQ2_0</code></li>
+<li><code>MXFP4</code></li>
+<li><code>NVFP4</code></li>
+<li><code>Q1_0</code></li>
+<li><code>Q2_0</code></li>
+<li><code>F8_E4M3</code></li>
+</ul>
+<p>The type derives <code>Eq</code>, <code>Debug</code>.</p>
+<div class="member" id="ggmltype-all" data-name="ggmltype::all">
+<pre class="sig">pub fn GgmlType::all() -&gt; Array[Self]</pre>
+<p>Every encoding the table holds, in <code>ggml</code>'s order.</p>
+</div>
+<div class="member" id="ggmltype-block_size" data-name="ggmltype::block_size">
+<pre class="sig">pub fn GgmlType::block_size(Self) -&gt; Int32</pre>
+<p>How many values one block holds. Plain float and integer encodings hold
+one value per block; the quantised ones hold a whole row chunk.</p>
+</div>
+<div class="member" id="ggmltype-bytes_per_block" data-name="ggmltype::bytes_per_block">
+<pre class="sig">pub fn GgmlType::bytes_per_block(Self) -&gt; Int32</pre>
+<p>How many bytes one block takes.</p>
+</div>
+<div class="member" id="ggmltype-code" data-name="ggmltype::code">
+<pre class="sig">pub fn GgmlType::code(Self) -&gt; UInt32</pre>
+<p>The number the file stores for this encoding.</p>
+</div>
+<div class="member" id="ggmltype-is_quantized" data-name="ggmltype::is_quantized">
+<pre class="sig">pub fn GgmlType::is_quantized(Self) -&gt; Bool</pre>
+<p>Whether the encoding packs several values into a block, which is what
+makes a block stand for scaled integers rather than the values themselves.</p>
+</div>
+<div class="member" id="ggmltype-name" data-name="ggmltype::name">
+<pre class="sig">pub fn GgmlType::name(Self) -&gt; String</pre>
+<p>The name this encoding goes by in a dump, such as <code>Q4_K</code> — the spelling the
+format's own tooling prints, and the one on the variant.</p>
+</div>
+<div class="member" id="ggmltype-of" data-name="ggmltype::of">
+<pre class="sig">pub fn GgmlType::of(UInt32) -&gt; Self?</pre>
+<p>The encoding a file's number names, or <code>None</code> for a number this version of
+the format does not define.</p>
+</div>
+</article>
+<article class="api-entry" data-track id="header" data-name="header">
+<h3><span class="kind">struct</span>Header</h3>
+<p>The fixed part of a file: the magic, the version, and how many of the two
+tables follow.</p>
+<pre class="sig">pub(all) struct Header {</pre>
+<ul class="variants">
+<li><code>version : Version</code></li>
+<li><code>tensors : Int32</code></li>
+<li><code>entries : Int32</code></li>
+</ul>
+<p>The type derives <code>Eq</code>, <code>Debug</code>.</p>
+</article>
+<article class="api-entry" data-track id="limits" data-name="limits">
+<h3><span class="kind">struct</span>Limits</h3>
+<p>Ceilings on what a file may ask of a reader, so that a corrupt or hostile
+length cannot ask for gigabytes before the bytes behind it turn up.
+
+Each has a name and a published preset, so a caller reading files it did not
+make can tighten one without guessing at the rest. Going past one is
+<code>Refused</code>, carrying the ceiling and the number that went past it.</p>
+<pre class="sig">pub(all) struct Limits {</pre>
+<ul class="variants">
+<li><code>entries : Int32</code></li>
+<li><code>tensors : Int32</code></li>
+<li><code>text : Int32</code></li>
+<li><code>items : Int32</code></li>
+<li><code>depth : Int32</code></li>
+</ul>
+<p>The type derives <code>Eq</code>, <code>Debug</code>.</p>
+</article>
+<article class="api-entry" data-track id="meta" data-name="meta">
+<h3><span class="kind">struct</span>Meta</h3>
+<p>The metadata table: pairs in the order the file holds them, with a lookup
+by key beside it.
+
+Order is kept because writing the table back in another order would change
+the file, and because the order often says something — a vocabulary and its
+merges are easier to read in the order they were written.</p>
+<pre class="sig">pub struct Meta {</pre>
+<ul class="variants">
+<li><code>// private fields</code></li>
+</ul>
+<div class="member" id="meta-contains" data-name="meta::contains">
+<pre class="sig">pub fn Meta::contains(Self, StringView) -&gt; Bool</pre>
+<p>Whether the table has that key.</p>
+</div>
+<div class="member" id="meta-count" data-name="meta::count">
+<pre class="sig">pub fn Meta::count(Self) -&gt; Int32</pre>
+<p>How many pairs the table holds.</p>
+</div>
+<div class="member" id="meta-entries" data-name="meta::entries">
+<pre class="sig">pub fn Meta::entries(Self) -&gt; ArrayView[Entry]</pre>
+<p>The pairs, in file order.</p>
+</div>
+<div class="member" id="meta-entry" data-name="meta::entry">
+<pre class="sig">pub fn Meta::entry(Self, StringView) -&gt; Entry?</pre>
+<p>The whole pair under a key, with the position it was read from.</p>
+</div>
+<div class="member" id="meta-flag" data-name="meta::flag">
+<pre class="sig">pub fn Meta::flag(Self, StringView) -&gt; Bool?</pre>
+<p>The flag under a key when it is a <code>bool</code>.</p>
+</div>
+<div class="member" id="meta-float" data-name="meta::float">
+<pre class="sig">pub fn Meta::float(Self, StringView) -&gt; Double?</pre>
+<p>The number under a key when it is stored as <code>float32</code> or <code>float64</code>.</p>
+</div>
+<div class="member" id="meta-get" data-name="meta::get">
+<pre class="sig">pub fn Meta::get(Self, StringView) -&gt; Value?</pre>
+<p>The value under a key.</p>
+</div>
+<div class="member" id="meta-int" data-name="meta::int">
+<pre class="sig">pub fn Meta::int(Self, StringView) -&gt; Int64?</pre>
+<p>The number under a key when it is stored as a signed kind and fits 64 bits.</p>
+</div>
+<div class="member" id="meta-items" data-name="meta::items">
+<pre class="sig">pub fn Meta::items(Self, StringView) -&gt; Array[Value]?</pre>
+<p>The entries under a key when it is an array.</p>
+</div>
+<div class="member" id="meta-text" data-name="meta::text">
+<pre class="sig">pub fn Meta::text(Self, StringView) -&gt; String?</pre>
+<p>The text under a key, or <code>None</code> if it is absent or holds something else.</p>
+</div>
+<div class="member" id="meta-uint" data-name="meta::uint">
+<pre class="sig">pub fn Meta::uint(Self, StringView) -&gt; UInt64?</pre>
+<p>The number under a key when it is stored as an unsigned kind; <code>None</code>
+otherwise, a negative signed number included.</p>
+</div>
+</article>
+<article class="api-entry" data-track id="tensor" data-name="tensor">
+<h3><span class="kind">struct</span>Tensor</h3>
+<p>One entry of a file's tensor index: what it is called, what it is stored as,
+its dimensions, where its bytes start, and — when the file was read — where
+the entry itself sits.
+
+The dimensions are <code>ggml</code>'s order, the one the file stores: the first is the
+row the innermost loop walks, so a matrix of 4096 rows of 11008 values is
+<code>[11008, 4096]</code> and takes <code>11008 * 4096 * 2</code> bytes as <code>f16</code>.</p>
+<pre class="sig">pub struct Tensor {</pre>
+<ul class="variants">
+<li><code>// private fields</code></li>
+</ul>
+<p>The type derives <code>Eq</code>, <code>Debug</code>.</p>
+<div class="member" id="tensor-at" data-name="tensor::at">
+<pre class="sig">pub fn Tensor::at(Self) -&gt; Int64</pre>
+<p>Where the entry sits in the file it was read from, or -1 for one made here.</p>
+</div>
+<div class="member" id="tensor-byte_length" data-name="tensor::byte_length">
+<pre class="sig">pub fn Tensor::byte_length(Self) -&gt; Int64 raise Refused</pre>
+<p>How many bytes the tensor takes, blocks and all. <code>Refused</code> when its row is
+not a whole number of blocks, which no reader could walk.</p>
+</div>
+<div class="member" id="tensor-data" data-name="tensor::data">
+<pre class="sig">pub fn Tensor::data(Self) -&gt; BytesView?</pre>
+<p>The bytes attached to it, when it carries its own rather than borrowing the
+file's.</p>
+</div>
+<div class="member" id="tensor-dims" data-name="tensor::dims">
+<pre class="sig">pub fn Tensor::dims(Self) -&gt; ArrayView[UInt64]</pre>
+<p>The dimensions in <code>ggml</code>'s order, the row first.</p>
+</div>
+<div class="member" id="tensor-extent" data-name="tensor::extent">
+<pre class="sig">pub fn Tensor::extent(Self) -&gt; Extent raise Refused</pre>
+<p>Where the bytes sit and how far they run.</p>
+</div>
+<div class="member" id="tensor-kind" data-name="tensor::kind">
+<pre class="sig">pub fn Tensor::kind(Self) -&gt; GgmlType</pre>
+<p>The encoding its blocks are stored in.</p>
+</div>
+<div class="member" id="tensor-n_elements" data-name="tensor::n_elements">
+<pre class="sig">pub fn Tensor::n_elements(Self) -&gt; UInt64 raise Refused</pre>
+<p>How many values the tensor holds.</p>
+</div>
+<div class="member" id="tensor-name" data-name="tensor::name">
+<pre class="sig">pub fn Tensor::name(Self) -&gt; String</pre>
+<p>The name the index gives it.</p>
+</div>
+<div class="member" id="tensor-new" data-name="tensor::new">
+<pre class="sig">pub fn Tensor::new(name~ : String, kind~ : GgmlType, dims~ : Array[UInt64]) -&gt; Self</pre>
+<p>A tensor to put into a file, before its bytes are attached.</p>
+</div>
+</article>
+<article class="api-entry" data-track id="value" data-name="value">
+<h3><span class="kind">enum</span>Value</h3>
+<p>One metadata value, as the file holds it.
+
+The integer kinds keep their width: a count stored as <code>uint32</code> reads back
+as <code>UInt32</code> and is written as <code>uint32</code> again, so a file survives a round
+trip unchanged even where two widths could hold the same number. <code>Array</code>
+carries the kind its entries share, which an empty list would otherwise
+lose, and its entries may themselves be <code>Array</code>.</p>
+<pre class="sig">pub(all) enum Value {</pre>
+<ul class="variants">
+<li><code>UInt8(UInt32)</code></li>
+<li><code>Int8(Int32)</code></li>
+<li><code>UInt16(UInt32)</code></li>
+<li><code>Int16(Int32)</code></li>
+<li><code>UInt32(UInt32)</code></li>
+<li><code>Int32(Int32)</code></li>
+<li><code>Float32(Float)</code></li>
+<li><code>Bool(Bool)</code></li>
+<li><code>String(String)</code></li>
+<li><code>Array(ValueType, Array[Value])</code></li>
+<li><code>UInt64(UInt64)</code></li>
+<li><code>Int64(Int64)</code></li>
+<li><code>Float64(Double)</code></li>
+</ul>
+<p>The type derives <code>Eq</code>, <code>Debug</code>.</p>
+<div class="member" id="value-as_bool" data-name="value::as_bool">
+<pre class="sig">pub fn Value::as_bool(Self) -&gt; Bool?</pre>
+<p>The truth of a <code>bool</code> value.</p>
+</div>
+<div class="member" id="value-as_float" data-name="value::as_float">
+<pre class="sig">pub fn Value::as_float(Self) -&gt; Double?</pre>
+<p>The number as a double, widening whichever width it was stored in. A
+<code>float64</code> comes back bit for bit.</p>
+</div>
+<div class="member" id="value-as_int" data-name="value::as_int">
+<pre class="sig">pub fn Value::as_int(Self) -&gt; Int64?</pre>
+<p>The number as a signed 64-bit integer; <code>None</code> for the kinds that are not
+numbers without a fraction, and for an unsigned one too large to hold.</p>
+</div>
+<div class="member" id="value-as_items" data-name="value::as_items">
+<pre class="sig">pub fn Value::as_items(Self) -&gt; Array[Self]?</pre>
+<p>The entries of an <code>array</code> value, whatever kind they share.</p>
+</div>
+<div class="member" id="value-as_text" data-name="value::as_text">
+<pre class="sig">pub fn Value::as_text(Self) -&gt; String?</pre>
+<p>The text of a <code>string</code> value.</p>
+</div>
+<div class="member" id="value-as_uint" data-name="value::as_uint">
+<pre class="sig">pub fn Value::as_uint(Self) -&gt; UInt64?</pre>
+<p>The number as an unsigned 64-bit integer, for the kinds that are numbers
+without a fraction; <code>None</code> for the rest.</p>
+</div>
+<div class="member" id="value-items" data-name="value::items">
+<pre class="sig">pub fn Value::items(ValueType, Array[Self]) -&gt; Self</pre>
+<p>An <code>array</code> value whose entries are <code>kind</code>; every entry must be of that
+kind, which the writer checks.</p>
+</div>
+<div class="member" id="value-text" data-name="value::text">
+<pre class="sig">pub fn Value::text(String) -&gt; Self</pre>
+<p>A <code>string</code> value.</p>
+</div>
+<div class="member" id="value-to_json" data-name="value::to_json">
+<pre class="sig">pub fn Value::to_json(Self) -&gt; @json.Json</pre>
+
+</div>
+<div class="member" id="value-value_type" data-name="value::value_type">
+<pre class="sig">pub fn Value::value_type(Self) -&gt; ValueType</pre>
+<p>Which of the thirteen kinds this value is.</p>
+</div>
+</article>
+<article class="api-entry" data-track id="valuetype" data-name="valuetype">
+<h3><span class="kind">enum</span>ValueType</h3>
+<p>The thirteen kinds of value a metadata entry can hold, numbered as the file
+numbers them. The numbers are the format's, and one of them, <code>Array</code>, says
+the value is a list whose own entries share a kind.</p>
+<pre class="sig">pub(all) enum ValueType {</pre>
+<ul class="variants">
+<li><code>UInt8</code></li>
+<li><code>Int8</code></li>
+<li><code>UInt16</code></li>
+<li><code>Int16</code></li>
+<li><code>UInt32</code></li>
+<li><code>Int32</code></li>
+<li><code>Float32</code></li>
+<li><code>Bool</code></li>
+<li><code>String</code></li>
+<li><code>Array</code></li>
+<li><code>UInt64</code></li>
+<li><code>Int64</code></li>
+<li><code>Float64</code></li>
+</ul>
+<p>The type derives <code>Eq</code>, <code>Debug</code>.</p>
+<div class="member" id="valuetype-code" data-name="valuetype::code">
+<pre class="sig">pub fn ValueType::code(Self) -&gt; UInt32</pre>
+<p>The number the file stores for this kind of value.</p>
+</div>
+<div class="member" id="valuetype-name" data-name="valuetype::name">
+<pre class="sig">pub fn ValueType::name(Self) -&gt; String</pre>
+<p>The name the format's own tooling prints for this kind, in the capital
+letters a metadata dump carries. It is the name a dump compared against
+another tool's has to agree on.</p>
+</div>
+<div class="member" id="valuetype-of" data-name="valuetype::of">
+<pre class="sig">pub fn ValueType::of(UInt32) -&gt; Self?</pre>
+<p>The kind a file's number names, or <code>None</code> past the thirteen.</p>
+</div>
+</article>
+<article class="api-entry" data-track id="version" data-name="version">
+<h3><span class="kind">enum</span>Version</h3>
+<p>The version of the format a file was written in. Versions 1 and 2 are read;
+3 is read and written.</p>
+<pre class="sig">pub(all) enum Version {</pre>
+<ul class="variants">
+<li><code>V1</code></li>
+<li><code>V2</code></li>
+<li><code>V3</code></li>
+</ul>
+<p>The type derives <code>Eq</code>, <code>Debug</code>.</p>
+<div class="member" id="version-code" data-name="version::code">
+<pre class="sig">pub fn Version::code(Self) -&gt; UInt32</pre>
+<p>The number the file stores for this version.</p>
+</div>
+<div class="member" id="version-of" data-name="version::of">
+<pre class="sig">pub fn Version::of(UInt32) -&gt; Self?</pre>
+<p>The version a number names, or <code>None</code> for a number the format never had.</p>
+</div>
+</article>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap">
+        <div>
+          <a class="brand" href="./" aria-label="moongguf, home">
+            <span class="brand-bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            <span class="brand-name">moongguf</span>
+          </a>
+          <p class="footer-note" style="margin-top: 12px">
+            GGUF v3 read and written, versions 1 and 2 read. The format is
+            <a href="https://github.com/ggml-org/ggml/blob/master/docs/gguf.md">specified</a>
+            by <code>ggml</code>.
+          </p>
+        </div>
+        <nav class="footer-links" aria-label="Elsewhere">
+          <a href="https://github.com/moonbitstack/moongguf">GitHub</a>
+          <a href="https://mooncakes.io/docs/moonbitstack/moongguf">mooncakes</a>
+          <a href="guide.html">Guide</a>
+          <a href="anatomy.html">Anatomy</a>
+          <a href="https://github.com/moonbitstack/moongguf/blob/master/LICENSE">Apache-2.0</a>
+        </nav>
+      </div>
+    </footer>
+
+    <script src="assets/page.js"></script>
+    <script src="assets/code.js"></script>
+  </body>
+</html>
