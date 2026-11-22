@@ -5,12 +5,15 @@ let loading;
 
 export function engine() {
   if (!loading) {
-    loading = import(new URL("../engine/moongguf.js", import.meta.url).href).catch(
-      (error) => {
-        console.error("the engine did not load", error);
-        return null;
-      },
-    );
+    const here = new URL(import.meta.url);
+    const target = new URL("../engine/moongguf.js", here);
+    // The page names this loader after the commit it was built from; the engine
+    // it pulls in belongs to the same deploy, not to a cached earlier one.
+    target.search = here.search;
+    loading = import(target.href).catch((error) => {
+      console.error("the engine did not load", error);
+      return null;
+    });
   }
   return loading;
 }

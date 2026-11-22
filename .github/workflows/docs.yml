@@ -45,6 +45,24 @@ jobs:
           python3 scripts/gen_api.py
           git diff --exit-code -- docs/api.html
 
+      # Pages caches an asset for ten minutes, so a reader who opened the page
+      # just before a deploy can hold the previous stylesheet and see none of
+      # the change. Naming each asset after the commit makes that impossible,
+      # and the name is on the artifact only, not in the repository.
+      - name: name every asset after the commit that built it
+        run: |
+          sha="${GITHUB_SHA::8}"
+          for page in docs/*.html; do
+            sed -i -E "s#(assets/[a-z-]+\.(css|js))\"#\1?v=${sha}\"#g" "$page"
+          done
+          # The loader each page imports is not named by the page itself, so the
+          # import specifier carries the name instead, and the engine the loader
+          # asks for inherits it from there.
+          for script in docs/assets/*.js; do
+            sed -i "s|from \"./engine.js\"|from \"./engine.js?v=${sha}\"|" "$script"
+          done
+          grep -h -o "assets/[a-z-]*\.\(css\|js\)?v=[0-9a-f]*" docs/index.html | sort -u
+
       - uses: actions/upload-pages-artifact@v5
         with:
           path: docs
