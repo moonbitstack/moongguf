@@ -53,7 +53,8 @@ function paint_ribbon(info) {
       button.type = "button";
       button.className = "seg";
       button.dataset.part = span.part;
-      button.style.flex = `${span.length} 1 0`;
+      button.style.setProperty("--grow", String(span.length));
+      button.style.setProperty("--share", ((span.length / info.bytes) * 100).toFixed(2));
       button.style.setProperty("--tone", `var(--${span.part === "head" ? "head" : span.part})`);
       if (span.length / info.bytes < 0.09) button.classList.add("seg-narrow");
       const pct = ((span.length / info.bytes) * 100).toFixed(1);

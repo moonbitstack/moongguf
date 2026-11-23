@@ -14,7 +14,7 @@
   --line: color-mix(in srgb, var(--ink) 13%, transparent);
   --line-soft: color-mix(in srgb, var(--ink) 7%, transparent);
   --highlight: #ffd84d;
-  --swipe: color-mix(in srgb, var(--highlight) 78%, transparent);
+  --swipe: color-mix(in srgb, var(--highlight) 92%, transparent);
 
   /* One colour per part of the file, kept everywhere those parts are named. */
   --head: #b57d05;
@@ -33,7 +33,7 @@
     0 26px 44px -26px color-mix(in srgb, var(--ink) 40%);
 
   --sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-  --display: "Bricolage Grotesque", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --display: "Schibsted Grotesk", "Inter", ui-sans-serif, system-ui, sans-serif;
   --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   /* Apple's move: damping 1, response 0.4 — no overshoot, no lag. */
@@ -66,7 +66,7 @@
   --meta: #4ec3ae;
   --index: #a58cf5;
   --data: #f07a9c;
-  --swipe: color-mix(in srgb, var(--highlight) 34%, transparent);
+  --swipe: color-mix(in srgb, var(--highlight) 62%, transparent);
 
   --head-wash: color-mix(in srgb, var(--head) 16%, var(--paper));
   --meta-wash: color-mix(in srgb, var(--meta) 15%, var(--paper));
@@ -94,7 +94,7 @@
     --meta: #4ec3ae;
     --index: #a58cf5;
     --data: #f07a9c;
-    --swipe: color-mix(in srgb, var(--highlight) 34%, transparent);
+    --swipe: color-mix(in srgb, var(--highlight) 62%, transparent);
 
     --head-wash: color-mix(in srgb, var(--head) 16%, var(--paper));
     --meta-wash: color-mix(in srgb, var(--meta) 15%, var(--paper));
@@ -165,6 +165,9 @@ select {
   font: inherit;
   font-variant-ligatures: no-contextual;
   color: inherit;
+  /* No platform chrome: every control on the page is drawn by this sheet. */
+  appearance: none;
+  -webkit-appearance: none;
 }
 
 ::selection {
@@ -253,8 +256,8 @@ h3,
 h4 {
   font-family: var(--display);
   font-weight: 700;
-  letter-spacing: -0.025em;
-  line-height: 1.08;
+  letter-spacing: -0.032em;
+  line-height: 1.02;
   margin: 0;
   text-wrap: balance;
 }
@@ -370,7 +373,7 @@ mark {
   font-family: var(--display);
   font-weight: 800;
   font-size: 19px;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.05em;
 }
 
 .brand-bars {
@@ -430,6 +433,12 @@ mark {
   background: color-mix(in srgb, var(--ink) 8%, transparent);
 }
 
+/* The nav's link padding must not reach the icon buttons: it narrows the box
+   and the glyph inside it. */
+.nav .icon-button {
+  padding: 0;
+}
+
 .icon-button {
   display: inline-grid;
   place-items: center;
@@ -453,6 +462,21 @@ mark {
   width: 16px;
   height: 16px;
   display: block;
+  flex: none;
+}
+
+/* A filled mark carries more ink than a stroked one at the same box, so it is
+   drawn a shade smaller to sit at the same visual size. */
+.icon-button .i-mark {
+  width: 14.5px;
+  height: 14.5px;
+}
+
+/* The crescent and the sun are drawn with air around them, so their boxes are
+   larger than the mark's while their ink is the same. */
+.icon-button .moon {
+  width: 20.5px;
+  height: 20.5px;
 }
 
 .theme-toggle .moon,
@@ -723,15 +747,10 @@ mark {
 }
 
 .hero h1 {
-  font-size: clamp(2.6rem, 1.7rem + 3.6vw, 4.4rem);
-  letter-spacing: -0.045em;
-  line-height: 0.98;
-}
-
-.hero h1 .sub {
-  display: block;
-  color: var(--ink-3);
-  font-weight: 400;
+  font-size: clamp(2.45rem, 1.6rem + 3.3vw, 4.1rem);
+  letter-spacing: -0.038em;
+  line-height: 0.99;
+  font-weight: 700;
 }
 
 .hero-actions {
@@ -790,6 +809,7 @@ mark {
 .seg {
   position: relative;
   display: flex;
+  flex: var(--grow, 1) 1 0;
   flex-direction: column;
   justify-content: flex-end;
   gap: 6px;
@@ -1021,6 +1041,7 @@ mark {
   height: 3px;
   background: var(--tone);
   opacity: 0.85;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 5px) 100%, 5px 100%);
 }
 
 .part:hover {
@@ -1056,7 +1077,9 @@ mark {
   font-family: var(--mono);
   font-size: 11.5px;
   color: var(--ink-2);
-  overflow-wrap: anywhere;
+  /* Break a long name only when it cannot fit a line of its own: splitting
+     `general.architecture` across lines reads as a mistake. */
+  overflow-wrap: break-word;
 }
 
 .part .call em {
@@ -1106,9 +1129,10 @@ mark {
 }
 
 .field svg {
-  width: 14px;
-  height: 14px;
+  width: 15px;
+  height: 15px;
   flex: none;
+  stroke-width: 1.45;
 }
 
 .field input {
@@ -1211,6 +1235,7 @@ mark {
 
 .enc-bits {
   font-family: var(--display);
+  font-variant-numeric: tabular-nums;
   font-size: 25px;
   font-weight: 600;
   letter-spacing: -0.04em;
@@ -1747,6 +1772,7 @@ mark {
 }
 
 .toc a {
+  position: relative;
   display: flex;
   gap: 10px;
   padding: 6px 10px 6px 9px;
@@ -1774,6 +1800,18 @@ mark {
 .toc a.is-current {
   color: var(--ink);
   background: color-mix(in srgb, var(--ink) 7%, transparent);
+  border-radius: 0 7px 7px 0;
+}
+
+.toc a.is-current::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 7px;
+  bottom: 7px;
+  width: 3px;
+  background: var(--data);
+  clip-path: polygon(0 0, 100% 4px, 100% calc(100% - 4px), 0 100%);
 }
 
 .toc a.is-current::before {
@@ -1833,9 +1871,9 @@ mark {
   content: "";
   position: absolute;
   inset: 0 auto 0 0;
-  width: 2px;
+  width: 3px;
   background: var(--meta);
-  clip-path: polygon(0 0, 100% 6px, 100% calc(100% - 6px), 0 100%);
+  clip-path: polygon(0 0, 100% 5px, 100% calc(100% - 5px), 0 100%);
 }
 
 .note b {
@@ -2098,6 +2136,7 @@ mark {
 }
 
 .api-nav a {
+  position: relative;
   display: block;
   padding: 4px 9px;
   border-radius: 6px;
@@ -2115,6 +2154,18 @@ mark {
 .api-nav a.is-current {
   color: var(--ink);
   background: color-mix(in srgb, var(--ink) 7%, transparent);
+  border-radius: 0 6px 6px 0;
+}
+
+.api-nav a.is-current::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 5px;
+  bottom: 5px;
+  width: 3px;
+  background: var(--ink);
+  clip-path: polygon(0 0, 100% 4px, 100% calc(100% - 4px), 0 100%);
 }
 
 .api-nav .group {
@@ -2195,9 +2246,18 @@ mark {
 }
 
 .member {
+  position: relative;
   margin: 12px 0 0 16px;
-  padding-left: 14px;
-  border-left: 1px solid var(--line);
+  padding-left: 15px;
+}
+
+.member::before {
+  content: "";
+  position: absolute;
+  inset: 3px auto 3px 0;
+  width: 2px;
+  background: color-mix(in srgb, var(--ink) 22%, transparent);
+  clip-path: polygon(0 0, 100% 4px, 100% calc(100% - 4px), 0 100%);
 }
 
 .member h4 {
@@ -2296,25 +2356,38 @@ mark {
   .ribbon {
     height: auto;
     flex-direction: column;
-    gap: 6px;
+    align-items: stretch;
+    gap: 5px;
   }
   .seg {
+    flex: none;
     flex-direction: row-reverse;
     align-items: center;
     gap: 10px;
-    height: auto;
+    height: 26px;
   }
+  /* Stacked, the length of a bar is its share of the file: the longest region
+     fills the row, and the rest stand in proportion to it. */
   .seg .bar {
     height: 22px;
-    flex: 1;
+    flex: none;
+    width: calc(var(--share, 0) * 1%);
   }
   .seg-tag {
     flex-direction: row;
     gap: 6px;
-    width: 104px;
+    width: 96px;
     flex: none;
   }
   .seg-tag span {
+    display: none;
+  }
+  /* Stacked, every row has a label: a narrow region no longer needs its name
+     turned on its side, because the row has its own line. */
+  .seg-narrow .seg-tag {
+    display: flex;
+  }
+  .seg-narrow .bar-label {
     display: none;
   }
   .seg-narrow .seg-tag b {
@@ -2385,12 +2458,7 @@ mark {
 
 /* The highlighter swipe, borrowed from a page of notes rather than a screen. */
 .swipe {
-  background-image: linear-gradient(
-    transparent 64%,
-    var(--swipe) 64% 94%,
-    transparent 94%
-  );
-  padding-bottom: 0.04em;
+  box-shadow: inset 0 -0.085em 0 var(--swipe);
 }
 
 body.is-dropping .play-pane {
@@ -2636,15 +2704,59 @@ body.is-dropping .play-pane {
   font-weight: 600;
 }
 
-select {
-  height: 34px;
-  padding: 0 10px;
-  border-radius: 9px;
+.select {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.select select {
+  appearance: none;
+  -webkit-appearance: none;
+  height: 30px;
+  padding: 0 28px 0 10px;
   border: 1px solid var(--line);
+  border-radius: 8px;
   background: var(--card);
-  font-family: var(--mono);
-  font-size: 12px;
   color: var(--ink);
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+.select select:hover {
+  border-color: color-mix(in srgb, var(--ink) 32%, transparent);
+}
+
+.select select:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.select .i-chev {
+  position: absolute;
+  right: 8px;
+  width: 12px;
+  height: 12px;
+  color: var(--ink-2);
+  pointer-events: none;
+}
+
+/* The search fields keep no browser furniture: no magnifier glyph, no native
+   clear button, no rounded platform box. */
+.field input[type="search"] {
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.field input[type="search"]::-webkit-search-decoration,
+.field input[type="search"]::-webkit-search-cancel-button,
+.field input[type="search"]::-webkit-search-results-button,
+.field input[type="search"]::-webkit-search-results-decoration {
+  -webkit-appearance: none;
+  display: none;
 }
 
 .panel-card {
